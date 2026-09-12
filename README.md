@@ -46,7 +46,7 @@ curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/inst
 curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.sh | bash -s -- mcp
 ```
 
-The script selects the exact OS/architecture asset and verifies its SHA-256 checksum. Desktop defaults: `~/Applications/adbtool.app` on macOS or `~/.local/share/adbtool/adbtool.AppImage` on Linux. MCP defaults to `~/.local/bin/adbtool-mcp`. `ADBTOOL_VERSION=v0.1.0` pins a release; `ADBTOOL_INSTALL_DIR` overrides the desktop directory and `ADBTOOL_BIN` the launcher/MCP directory. No compiler or source access is needed.
+The script selects the exact OS/architecture asset and verifies its SHA-256 checksum. The macOS desktop always installs in `/Applications/adbtool.app`, using `sudo` if that directory needs administrator access. Reinstalling replaces the same application; a failed copy restores the previous version. Linux defaults to `~/.local/share/adbtool/adbtool.AppImage`. MCP defaults to `~/.local/bin/adbtool-mcp`. `ADBTOOL_VERSION=v0.1.0` pins a release; `ADBTOOL_INSTALL_DIR` overrides the Linux desktop directory and `ADBTOOL_BIN` the launcher/MCP directory. No compiler or source access is needed.
 
 On Windows, in PowerShell:
 

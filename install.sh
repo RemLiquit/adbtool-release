@@ -4,7 +4,8 @@ set -euo pipefail
 component="${1:-desktop}"
 if [[ "$component" == '--help' ]]; then
   echo 'Usage: bash install.sh [desktop|mcp]'
-  echo 'Optional: ADBTOOL_VERSION=vX.Y.Z, ADBTOOL_INSTALL_DIR=/path, ADBTOOL_BIN=/path'
+  echo 'macOS desktop destination: /Applications/adbtool.app'
+  echo 'Optional: ADBTOOL_VERSION=vX.Y.Z, ADBTOOL_INSTALL_DIR=/path (Linux only), ADBTOOL_BIN=/path'
   exit 0
 fi
 [[ "$component" == desktop || "$component" == mcp ]] || { echo 'Choose desktop or mcp.' >&2; exit 1; }
@@ -55,13 +56,23 @@ elif [[ "$host_os" == Darwin ]]; then
   if pgrep -x adbtool >/dev/null; then echo 'Quit adbtool before installing so recordings can finish.' >&2; exit 1; fi
   ditto -x -k "$work/$asset" "$work/unpacked"
   codesign --verify --deep --strict "$work/unpacked/adbtool.app"
-  destination="${ADBTOOL_INSTALL_DIR:-$HOME/Applications}"
-  mkdir -p "$destination"
-  backup="$destination/adbtool.app.previous-$(date +%Y%m%d%H%M%S)-$$"
-  if [[ -e "$destination/adbtool.app" ]]; then mv "$destination/adbtool.app" "$backup"; fi
-  if ! ditto "$work/unpacked/adbtool.app" "$destination/adbtool.app"; then
-    echo "Installation failed; previous version, if present: $backup" >&2; exit 1
+  destination='/Applications'
+  if [[ -w "$destination" ]]; then
+    app_install() { "$@"; }
+  else
+    echo 'Administrator access is required to install in /Applications.'
+    sudo -v
+    app_install() { sudo "$@"; }
   fi
+  app_install mkdir -p "$destination"
+  backup="$destination/.adbtool.previous-$(date +%Y%m%d%H%M%S)-$$"
+  if [[ -e "$destination/adbtool.app" ]]; then app_install mv "$destination/adbtool.app" "$backup"; fi
+  if ! app_install ditto "$work/unpacked/adbtool.app" "$destination/adbtool.app"; then
+    app_install rm -rf "$destination/adbtool.app"
+    if [[ -e "$backup" ]]; then app_install mv "$backup" "$destination/adbtool.app"; fi
+    echo 'Installation failed; the previous application, if present, was restored.' >&2; exit 1
+  fi
+  if [[ -e "$backup" ]]; then app_install rm -rf "$backup"; fi
   echo "Installed: $destination/adbtool.app"
 else
   destination="${ADBTOOL_INSTALL_DIR:-$HOME/.local/share/adbtool}"
