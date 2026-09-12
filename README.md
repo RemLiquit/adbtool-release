@@ -6,6 +6,14 @@ Android device management for **macOS, Windows and Linux**, with a desktop app a
 
 This repository distributes compiled applications and installation helpers. The application source is maintained privately.
 
+**Quick install — macOS and Linux:**
+
+```sh
+curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.sh | bash
+```
+
+This installs the desktop and its bundled MCP server, selects your architecture and verifies the download. Open **Agent setup** in the app to copy your MCP configuration.
+
 ## What it does
 
 - Connect over USB or WiFi, pair by QR or code, discover Android devices and save names.
@@ -30,13 +38,12 @@ The macOS build is ad-hoc signed, without Apple notarization; if macOS blocks th
 
 ## Install from a terminal
 
-Download and run the installer on macOS or Linux:
+Install the desktop app **with MCP included** in one command on macOS or Linux:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.sh -o install-adbtool.sh
-bash install-adbtool.sh
+curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.sh | bash
 # For the standalone agent server:
-bash install-adbtool.sh mcp
+curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.sh | bash -s -- mcp
 ```
 
 The script selects the exact OS/architecture asset and verifies its SHA-256 checksum. Desktop defaults: `~/Applications/adbtool.app` on macOS or `~/.local/share/adbtool/adbtool.AppImage` on Linux. MCP defaults to `~/.local/bin/adbtool-mcp`. `ADBTOOL_VERSION=v0.1.0` pins a release; `ADBTOOL_INSTALL_DIR` overrides the desktop directory and `ADBTOOL_BIN` the launcher/MCP directory. No compiler or source access is needed.
