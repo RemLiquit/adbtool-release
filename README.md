@@ -22,6 +22,7 @@ This installs the desktop and its bundled MCP server, selects your architecture 
 - Diagnose adb, mDNS, VPN interfaces and local network reachability.
 - Give agents 20 MCP tools for connection, inspection, Android shell, screenshots, UI hierarchy, media and diagnostics, plus an embedded LLM wiki.
 - Check for signed app updates automatically and install them from the app's **Updates** button.
+- Follow the system language in English or Spanish, or choose **System / English / Español** in the top bar. Changes apply immediately and persist across launches. Other system languages use English.
 
 ## Download
 
@@ -93,4 +94,4 @@ On Windows, use a path such as `C:\\Users\\you\\AppData\\Local\\adbtool\\bin\\ad
 
 ## Verification and limitations
 
-Releases are built and tested on native macOS ARM64/Intel, Linux x64 and Windows x64 runners. Tests use fake Android tools; phone/ROM-specific behavior still needs device testing. Some app labels remain Spanish. Downloads include `SHA256SUMS`, signed updater assets and `latest.json`. The GitHub-generated source archives contain only this distribution repository.
+Releases are built and tested on native macOS ARM64/Intel, Linux x64 and Windows x64 runners. Tests use fake Android tools; phone/ROM-specific behavior still needs device testing. The desktop translates its own interface and messages; device names, raw tool output and Android logs remain verbatim. MCP protocol prose and documentation are English. Downloads include `SHA256SUMS`, signed updater assets and `latest.json`. The GitHub-generated source archives contain only this distribution repository.
