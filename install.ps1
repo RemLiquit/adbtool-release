@@ -5,7 +5,7 @@ param(
 )
 $ErrorActionPreference = 'Stop'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-$Repo = 'RemLiquit/adbtool-releases'
+$Repo = 'RemLiquit/adbtool-release'
 $Architecture = if ($env:PROCESSOR_ARCHITEW6432) { $env:PROCESSOR_ARCHITEW6432 } else { $env:PROCESSOR_ARCHITECTURE }
 if ($Architecture -ne 'AMD64') { throw 'The published Windows build requires x64 Windows.' }
 if (-not $Version) { $Version = (Invoke-RestMethod "https://api.github.com/repos/$Repo/releases/latest").tag_name }
@@ -18,7 +18,9 @@ try {
     $Download = Join-Path $Work $Asset
     Write-Host "Downloading $Component $Version for Windows x64..."
     Invoke-WebRequest -UseBasicParsing "$Base/$Asset" -OutFile $Download
-    $Sums = (Invoke-WebRequest -UseBasicParsing "$Base/SHA256SUMS").Content
+    $SumsPath = Join-Path $Work 'SHA256SUMS'
+    Invoke-WebRequest -UseBasicParsing "$Base/SHA256SUMS" -OutFile $SumsPath
+    $Sums = Get-Content -LiteralPath $SumsPath -Raw -Encoding UTF8
     $MatchesFound = @($Sums -split '\r?\n' | Where-Object { $_ -match ('^[a-f0-9]{64}  ' + [regex]::Escape($Asset) + '$') })
     if ($MatchesFound.Count -ne 1) { throw 'Missing or ambiguous checksum.' }
     $Expected = $MatchesFound[0].Substring(0, 64)

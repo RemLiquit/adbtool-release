@@ -8,7 +8,7 @@ if [[ "$component" == '--help' ]]; then
   exit 0
 fi
 [[ "$component" == desktop || "$component" == mcp ]] || { echo 'Choose desktop or mcp.' >&2; exit 1; }
-repo='RemLiquit/adbtool-releases'
+repo='RemLiquit/adbtool-release'
 host_os="$(uname -s)"
 arch="$(uname -m)"
 case "$host_os/$arch" in
@@ -33,7 +33,7 @@ else asset="adbtool-$label.AppImage"; fi
 work="$(mktemp -d)"
 trap 'rm -rf "$work"' EXIT
 base="https://github.com/$repo/releases/download/$version"
-echo "Downloading $component $version for $label…"
+echo "Downloading $component $version for ${label}..."
 curl --fail --silent --show-error --location --retry 3 "$base/$asset" -o "$work/$asset"
 curl --fail --silent --show-error --location --retry 3 "$base/SHA256SUMS" -o "$work/SHA256SUMS"
 expected="$(awk -v name="$asset" '$2 == name {print $1}' "$work/SHA256SUMS")"

@@ -2,7 +2,7 @@
 
 Android device management for **macOS, Windows and Linux**, with a desktop app and a standalone **MCP server for AI agents**.
 
-[Download the latest release](https://github.com/RemLiquit/adbtool-releases/releases/latest)
+[Download the latest release](https://github.com/RemLiquit/adbtool-release/releases/latest)
 
 This repository distributes compiled applications and installation helpers. The application source is maintained privately.
 
@@ -33,7 +33,7 @@ The macOS build is ad-hoc signed, without Apple notarization; if macOS blocks th
 Download and run the installer on macOS or Linux:
 
 ```sh
-curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-releases/main/install.sh -o install-adbtool.sh
+curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.sh -o install-adbtool.sh
 bash install-adbtool.sh
 # For the standalone agent server:
 bash install-adbtool.sh mcp
@@ -44,7 +44,7 @@ The script selects the exact OS/architecture asset and verifies its SHA-256 chec
 On Windows, in PowerShell:
 
 ```powershell
-Invoke-WebRequest https://raw.githubusercontent.com/RemLiquit/adbtool-releases/main/install.ps1 -OutFile install-adbtool.ps1
+Invoke-WebRequest https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/install.ps1 -OutFile install-adbtool.ps1
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install-adbtool.ps1
 # For MCP:
 powershell -NoProfile -ExecutionPolicy Bypass -File .\install-adbtool.ps1 -Component mcp
