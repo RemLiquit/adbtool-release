@@ -14,6 +14,13 @@ curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/inst
 
 This installs the desktop and its bundled MCP server, selects your architecture and verifies the download. Open **Agent setup** in the app to copy your MCP configuration.
 
+## Latest release: v0.1.3
+
+Fixes wireless pairing and reconnection on macOS and recent Android: code pairing fills in the
+phone's address by itself, the title bar shows the adb version actually running (with restart and
+update actions), macOS Local Network permission is requested, and reconnect no longer misreports
+network errors or leaves stale failures on screen. MAC addresses are learned even on hardened ROMs.
+
 ## What it does
 
 - Connect over USB or WiFi, pair by QR or code, discover Android devices and save names.
