@@ -14,12 +14,13 @@ curl -fsSL https://raw.githubusercontent.com/RemLiquit/adbtool-release/main/inst
 
 This installs the desktop and its bundled MCP server, selects your architecture and verifies the download. Open **Agent setup** in the app to copy your MCP configuration.
 
-## Latest release: v0.1.3
+## Latest release: v0.1.5
 
-Fixes wireless pairing and reconnection on macOS and recent Android: code pairing fills in the
-phone's address by itself, the title bar shows the adb version actually running (with restart and
-update actions), macOS Local Network permission is requested, and reconnect no longer misreports
-network errors or leaves stale failures on screen. MAC addresses are learned even on hardened ROMs.
+Agents connected over MCP can search the phone's logcat by app, level, tag and regex, search adbtool's saved activity log and find screenshots and recordings. Diagnostics no longer reports Apple's own iPhone-pairing tunnel as a VPN on macOS. Includes the
+v0.1.4 fixes: screen mirroring works when adb lists the same wireless phone twice (a `(2)` transport scrcpy
+cannot address). The title bar now also shows the installed scrcpy version, warns when a newer
+release exists and Diagnostics can update it in one click. Physical screen control accepts
+scrcpy 3.x–5.x.
 
 ## What it does
 

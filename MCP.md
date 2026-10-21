@@ -55,10 +55,50 @@ Tools:
 
 - Discovery and connections: `list_devices`, `device_info`, `discover_devices`, `connect_device`,
   `pair_device`, `reconnect_device`, `disconnect_device`.
-- Inspect and automate: `screenshot` (inline PNG), `ui_hierarchy` (XML), `shell` (Android shell),
-  `logcat` (bounded recent snapshot), `diagnose`.
+- Inspect and automate: `screenshot` (inline PNG; `save: true` also writes a file), `ui_hierarchy`
+  (XML), `shell` (Android shell), `logcat` (filtered device log search), `diagnose`.
+- Logs and files: `app_logs` (adbtool's own activity log), `media_files` (saved screenshots and
+  recordings with paths).
 - Media: `screen_state`, `screen_power`, `mirror_start`, `mirror_stop`, `record_start`, `record_stop`,
   `media_status`, `stay_awake`.
+
+## Searching logs
+
+`logcat` and `app_logs` share the same filters: `grep` (case-insensitive regex a line must match),
+`exclude` (regex of lines to drop), `lines` (newest matches to return, 1–2000, default 200) and
+`context` (0–20 lines kept around each match, groups split by `--`). Each result reports `matched`
+and `returned`, counts per level and the top 15 tags (or kinds and sources for `app_logs`) among the
+matches, and a `hint` when more matched than were returned. The intended loop is: search broadly,
+read the counts, `exclude` the noisiest tags, search again.
+
+`logcat` scopes the device log before filtering:
+
+- `package`: every process of that app (`com.example.app` and its `com.example.app:service`
+  subprocesses, by PID). `foreground: true` uses the app currently on screen instead.
+- `min_level`: `V`, `D`, `I`, `W`, `E` or `F`, applied by logcat itself.
+- `tag`: regex on the log tag only.
+- `buffer`: `default` (main, system, crash), `main`, `system`, `crash`, `events`, `radio` or `all`.
+  A crashed app has no running process, so search `buffer: "crash"` with `grep: "<package>"`.
+- `since_seconds`: entries from the last N seconds, measured on the phone's clock.
+
+Typical calls: the app on screen, errors only, `{"target":…,"foreground":true,"min_level":"E"}`;
+a crash with its stack, `{"target":…,"buffer":"crash","grep":"FATAL|AndroidRuntime","context":20}`;
+quieter output, `{"target":…,"package":"com.example.app","exclude":"chatty|OpenGLRenderer"}`.
+
+`app_logs` reads adbtool's activity log: everything the desktop log panel showed (adb commands,
+connects, pairing, errors, reconnect steps, mirror and recording lifecycle) and this server's tool
+calls and failures. It survives restarts and is shared by the desktop and every MCP process. Filter
+with `kind` (`cmd`, `ok`, `err`, `info`, `event`), `source` (`desktop`, `mcp`) and `since_minutes`.
+The file is `~/Library/Logs/adbtool/adbtool.jsonl` on macOS and `<local data dir>/adbtool/logs/`
+elsewhere (`ADBTOOL_LOG_DIR` overrides it); it rotates once at 4 MiB. Pairing codes are redacted
+before anything is written.
+
+## Screenshots and recordings
+
+`media_files` lists what adbtool saved, newest first, with absolute paths: screenshots from the
+desktop button or `screenshot` with `save: true` (`Downloads/adbtool-screenshots`, override with
+`ADBTOOL_SCREENSHOTS_DIR`) and recordings from either client (`Downloads/adbtool-recordings`,
+override with `ADBTOOL_RECORDINGS_DIR`). Read or attach a file from its path.
 
 Results contain `structuredContent` with `ok`, `data` or `error`, and recent operation `events`.
 The same JSON appears in a text content block for older clients; screenshots also include an
@@ -70,7 +110,7 @@ tracked connection addresses are cleaned up. Each call has its own token. A call
 180 seconds except media finalization: once record_stop or disconnect starts finalizing MP4, it
 finishes even if the client cancels. The recorder has a six-second graceful shutdown window: SIGTERM on Unix or targeted CTRL_BREAK on Windows.
 Shell timeout is configurable from 1 to 120 seconds, output is capped at 1 MiB per stream, and
-logcat accepts 1–2000 lines. Killing adb cannot guarantee that a remote background shell job stopped.
+logcat scans at most 32 MiB of the device log (`scan_truncated` reports a cut). Killing adb cannot guarantee that a remote background shell job stopped.
 
 The server shares adb's host daemon and pairing keys with the GUI and other adb clients. It has
 its own mirror, recording and cancellation state; it does not read GUI localStorage, saved names,
