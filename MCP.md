@@ -95,10 +95,12 @@ before anything is written.
 
 ## Screenshots and recordings
 
-`media_files` lists what adbtool saved, newest first, with absolute paths: screenshots from the
-desktop button or `screenshot` with `save: true` (`Downloads/adbtool-screenshots`, override with
-`ADBTOOL_SCREENSHOTS_DIR`) and recordings from either client (`Downloads/adbtool-recordings`,
-override with `ADBTOOL_RECORDINGS_DIR`). Read or attach a file from its path.
+`media_files` lists what adbtool saved, newest first, with absolute paths and the device each file
+came from: screenshots from the desktop button or `screenshot` with `save: true`, and recordings
+from either client. The folders are the ones chosen in the desktop app's Settings (stored in
+`<config dir>/adbtool/media.json`, shared with this server), by default
+`Downloads/adbtool-screenshots` and `Downloads/adbtool-recordings`. `ADBTOOL_SCREENSHOTS_DIR` and
+`ADBTOOL_RECORDINGS_DIR` in the client environment override both. Read or attach a file from its path.
 
 Results contain `structuredContent` with `ok`, `data` or `error`, and recent operation `events`.
 The same JSON appears in a text content block for older clients; screenshots also include an
